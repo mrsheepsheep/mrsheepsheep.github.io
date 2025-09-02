@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phishing on MrSheepSheep&#39;s curiosities</title>
+    <link>http://localhost:1313/tags/phishing/</link>
+    <description>Recent content in Phishing on MrSheepSheep&#39;s curiosities</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 Jun 2025 00:00:00 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/phishing/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Abusing Cloud Identity Providers for Phishing</title>
+      <link>http://localhost:1313/posts/idp-passthrough-phishing/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/posts/idp-passthrough-phishing/</guid>
+      <description>Many Cloud identity providers offer the ability to delegate authentication to an external identity providers. This is known as Federated authentication.&#xA;This post focuses on providers that offer Federated passthrough authentication to on-premise directories such as Active Directory or LDAP.&#xA;If implemented incorrectly on the provider&amp;rsquo;s side, on-premise passthrough authentication can be abused by threat actors to perform phishing attacks from the provider&amp;rsquo;s login page directly, under the attacker&amp;rsquo;s tenant / organization page.</description>
+    </item>
+    <item>
+      <title>Advanced Microsoft Phishing with a QuickAssist XSS</title>
+      <link>http://localhost:1313/posts/quickassist-phishing/</link>
+      <pubDate>Thu, 14 Nov 2024 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/posts/quickassist-phishing/</guid>
+      <description>Earlier this year, Microsoft published an blog about TA Storm-1811 using Quick Assist to conduct targeted social engineering attacks and deploy Black Basta ransomware.&#xA;https://www.microsoft.com/en-us/security/blog/2024/05/15/threat-actors-misusing-quick-assist-in-social-engineering-attacks-leading-to-ransomware/&#xA;The full attack scenario is quite long, but could have been easier to execute a few months earlier.&#xA;Indeed, in October 2023, during redteam research, I discovered and reported a cross-site-scripting vulnerability in QuickAssist that could allow an attacker to bypass consent prompts in QuickAssist andtake full control over the computer without approval from the victim.</description>
+    </item>
+  </channel>
+</rss>

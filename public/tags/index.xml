@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on MrSheepSheep&#39;s curiosities</title>
+    <link>http://localhost:1313/tags/</link>
+    <description>Recent content in Tags on MrSheepSheep&#39;s curiosities</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 Jun 2025 00:00:00 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Auth0</title>
+      <link>http://localhost:1313/tags/auth0/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/auth0/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cloud</title>
+      <link>http://localhost:1313/tags/cloud/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/cloud/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Entra ID</title>
+      <link>http://localhost:1313/tags/entra-id/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/entra-id/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Okta</title>
+      <link>http://localhost:1313/tags/okta/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/okta/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Phishing</title>
+      <link>http://localhost:1313/tags/phishing/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/phishing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>PingIdentity</title>
+      <link>http://localhost:1313/tags/pingidentity/</link>
+      <pubDate>Tue, 03 Jun 2025 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/pingidentity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Microsoft</title>
+      <link>http://localhost:1313/tags/microsoft/</link>
+      <pubDate>Thu, 14 Nov 2024 00:00:00 +0100</pubDate>
+      <guid>http://localhost:1313/tags/microsoft/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

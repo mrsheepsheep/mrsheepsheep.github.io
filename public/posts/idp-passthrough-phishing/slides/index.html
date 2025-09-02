@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en-us">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <title>Cloud Identity Providers Phishing // MrSheepSheep&#39;s curiosities</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.131.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="MrSheepSheep - Alexandre Souleau" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="/css/main.min.5b1fcc8902588589c4767187402a3c29f8b8d7a6fdef6d9f8f77045bb0d14fee.css" />
+    
+
+    
+  
+
+
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cloud Identity Providers Phishing">
+  <meta name="twitter:description" content="Cloud IdP Credential Phishing When identity providers do the phishing for us
+Obligatory Disclaimer You’re responsible for your actions.
+Only for educational purposes and authorized / simulated environments.
+Azure Once upon a time… in 2019
+Azure Pass-Through-Authentication Adam Chester @xpnsec
+https://blog.xpnsec.com/azuread-connect-for-redteam
+https://www.youtube.com/embed/UxKEQ9tIiLs
+Dr Nestori Syynimaa (@DrAzureAD)
+https://aadinternals.com/post/pta/
+PTASpy Post-exploit an compromised Azure ADConnect agent Hook LogonUserW by DLL injection Intercept and store credentials sent to MSA What if we don’t need to compromise the agent ?">
+
+    <meta property="og:url" content="http://localhost:1313/posts/idp-passthrough-phishing/slides/">
+  <meta property="og:site_name" content="MrSheepSheep&#39;s curiosities">
+  <meta property="og:title" content="Cloud Identity Providers Phishing">
+  <meta property="og:description" content="Cloud IdP Credential Phishing When identity providers do the phishing for us
+Obligatory Disclaimer You’re responsible for your actions.
+Only for educational purposes and authorized / simulated environments.
+Azure Once upon a time… in 2019
+Azure Pass-Through-Authentication Adam Chester @xpnsec
+https://blog.xpnsec.com/azuread-connect-for-redteam
+https://www.youtube.com/embed/UxKEQ9tIiLs
+Dr Nestori Syynimaa (@DrAzureAD)
+https://aadinternals.com/post/pta/
+PTASpy Post-exploit an compromised Azure ADConnect agent Hook LogonUserW by DLL injection Intercept and store credentials sent to MSA What if we don’t need to compromise the agent ?">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-03T00:00:00+01:00">
+    <meta property="article:modified_time" content="2025-06-03T00:00:00+01:00">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="/"><img class="app-header-avatar" src="/avatar.jpg" alt="MrSheepSheep - Alexandre Souleau" /></a>
+      <span class="app-header-title">MrSheepSheep&#39;s curiosities</span>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Cloud Identity Providers Phishing</h1>
+      <div class="post-meta">
+        <div>
+          <svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          Jun 3, 2025
+        </div>
+        <div>
+          <svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          3 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="cloud-idp-credential-phishing">Cloud IdP Credential Phishing</h1>
+<p>When identity providers do the phishing for us</p>
+<p><img src="images/kyle-phishing.png" alt="bg left"></p>
+<h1 id="obligatory-disclaimer">Obligatory Disclaimer</h1>
+<p>You&rsquo;re responsible for your actions.</p>
+<p>Only for educational purposes and authorized / simulated environments.</p>
+<h1 id="azure">Azure</h1>
+<p>Once upon a time&hellip; in 2019</p>
+<p><img src="images/story.png" alt="bg left"></p>
+<h2 id="azure-pass-through-authentication">Azure Pass-Through-Authentication</h2>
+<p>Adam Chester @xpnsec</p>
+<p><a href="https://blog.xpnsec.com/azuread-connect-for-redteam">https://blog.xpnsec.com/azuread-connect-for-redteam</a></p>
+<p><a href="https://www.youtube.com/embed/UxKEQ9tIiLs">https://www.youtube.com/embed/UxKEQ9tIiLs</a></p>
+<p>Dr Nestori Syynimaa (@DrAzureAD)</p>
+<p><a href="https://aadinternals.com/post/pta/">https://aadinternals.com/post/pta/</a></p>
+<hr>
+<p><img src="images/xpn-youtube.png" alt="h:12cm"></p>
+<h1 id="ptaspy">PTASpy</h1>
+<ol>
+<li>Post-exploit an compromised Azure ADConnect agent</li>
+<li>Hook <code>LogonUserW</code> by DLL injection</li>
+<li>Intercept and store credentials sent to MSA</li>
+</ol>
+<h1 id="what-if-we-dont-need-to-compromise-the-agent-"><em>What if we don&rsquo;t need to compromise the agent ?</em></h1>
+<p>Can we trick a victim to log into our own tenant ?</p>
+<hr>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h1 id="what-sorcery-is-this-">What sorcery is this ?</h1>
+<p>MS Docs</p>
+<p><img src="images/prefill-oidc.png" alt="h:100"></p>
+<p>No magic - just OIDC</p>
+<h2 id="login-hint-phishing">Login hint phishing</h2>
+<p>Victim logs into a prefilled form and thinks they are logging into their own account.</p>
+<p>Only 1 rule : user UPN must exist in Entra</p>
+<hr>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Common Azure tenant<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->Fake prefilled email<!-- raw HTML omitted --></p>
+<h1 id="lets-phish">Let&rsquo;s phish</h1>
+<p>Target:</p>
+<p>kyle.b@<!-- raw HTML omitted -->southparkelementary.net<!-- raw HTML omitted --></p>
+<p><img src="images/kyle.png" alt="bg right:40% 80%"></p>
+<h2 id="real-tenant">Real tenant</h2>
+<p><img src="images/real-tenant.png" alt="h:450"></p>
+<h3 id="dumb-tenant">Dumb tenant</h3>
+<p><img src="images/dumb-tenant.png" alt="h:450"></p>
+<h3 id="dumb-mail-">Dumb mail ?!</h3>
+<p><img src="images/dumb-mail.png" alt="h:400"></p>
+<h3 id="tenant-evil-twin">Tenant evil twin</h3>
+<p><img src="images/tenant-spoofing.png" alt="h:400">
+<em>kyle.b@<!-- raw HTML omitted -->southparkelementary<!-- raw HTML omitted -->.onmicrosoft.com</em></p>
+<h3 id="tenant-typosquatting">Tenant typosquatting</h3>
+<p><img src="images/tenant-typosquatting.png" alt="h:400"></p>
+<h3 id="verified-domain-typosquatting">Verified domain typosquatting</h3>
+<p><img src="images/verified-typosquatting.png" alt="h:450"></p>
+<h3 id="oidc-parameters-follow-redirects">OIDC parameters follow redirects&hellip;</h3>
+<p><!-- raw HTML omitted -->southparkelementary.sharepoint.com/<!-- raw HTML omitted --><!-- raw HTML omitted -->?login_hint=XXX<!-- raw HTML omitted --></p>
+<p>Redirects to <!-- raw HTML omitted -->login.microsoftonline.com/<!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->/oauth2/authorize?&hellip;..<!-- raw HTML omitted --><!-- raw HTML omitted -->&amp;login_hint=XXX<!-- raw HTML omitted --></p>
+<h3 id="bonus--10k-upn-spoofing-now-fixed">Bonus : $10k UPN spoofing (now fixed)</h3>
+<p><img src="images/real-tenant.png" alt="h:450"></p>
+<h1 id="general-methodology">General methodology</h1>
+<ol>
+<li>Choose a passthrough identity provider / service</li>
+<li>Send forged URL to victim</li>
+<li>Intercept authentication</li>
+<li>Profit</li>
+</ol>
+<h2 id="3-ways-to-phish">3 ways to phish</h2>
+<p>Depending on the provider</p>
+<ol>
+<li>Passthrough</li>
+<li>Known-login</li>
+<li>Prefill</li>
+</ol>
+<h3 id="passthrough-phishing">Passthrough phishing</h3>
+<p><img src="images/passthrough.svg" alt="w:1100"></p>
+<p>Any credential is sent to the attacker</p>
+<h3 id="passthrough-phishing-1">Passthrough phishing</h3>
+<p><img src="images/passthrough-form.svg" alt="h:450"></p>
+<h3 id="known-login-phishing">Known-login phishing</h3>
+<p>Victim login must exist in attacker&rsquo;s user directory</p>
+<p>Example: Entra ID demo</p>
+<h3 id="domain-verification">Domain verification</h3>
+<p>Prevents known-login phishing
+<img src="images/domain-ownership.svg" alt="h:450"></p>
+<h3 id="prefill-phishing">Prefill phishing</h3>
+<p><img src="images/prefill-form.svg" alt="h:450"></p>
+<h2 id="phishing-harder">Phishing harder</h2>
+<ul>
+<li>Brand spoofing (logos, colours&hellip;)</li>
+<li>Abuse redirection features
+<ul>
+<li>Legit service + OIDC parameters = prefill attack</li>
+<li>Chain with MFA bypass / phishing</li>
+</ul>
+</li>
+<li>Automation</li>
+</ul>
+<h1 id="examples">Examples</h1>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Passthrough</th>
+<th>Known-login</th>
+<th>Prefill</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google Workspace</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td></td>
+</tr>
+<tr>
+<td>Entra ID</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Okta</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>Also known as <a href="https://pushsecurity.com/blog/oktajacking/">Oktajacking</a>.</td>
+</tr>
+<tr>
+<td>Auth0</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>It&rsquo;s a feature.</td>
+</tr>
+<tr>
+<td>PingIdentity</td>
+<td>✅</td>
+<td>✅</td>
+<td>?</td>
+<td>See <a href="https://blog.xpnsec.com/identity-providers-redteamers/">XPN&rsquo;s PoC</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="okta">Okta</h2>
+<p>[org].okta.com
+trial-[random].okta.com</p>
+<hr>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p><img src="images/okta-auth.svg" alt="h:550">
+<!-- raw HTML omitted -->Can you guess the phishing vector ?<!-- raw HTML omitted --></p>
+<h3 id="okta-passthrough">Okta passthrough</h3>
+<p>Turn a known-login vector into a passthrough vector using a <strong>catchall LDAP proxy</strong></p>
+<h3 id="okta-1">Okta</h3>
+<p>Login Hint (OIDC)</p>
+<p><!-- raw HTML omitted -->Passthrough username / email<!-- raw HTML omitted --></p>
+<p>Organization typosquatting</p>
+<p>Catch-all 🔥🔥🔥</p>
+<hr>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="auth0-okta">Auth0 (Okta)</h2>
+<p>Does not verify domains</p>
+<p>100% custom branding</p>
+<p>External OTP</p>
+<p>100% custom auth flow</p>
+<p><!-- raw HTML omitted -->Phishing as a Service 🔥🔥🔥<!-- raw HTML omitted --></p>
+<hr>
+<p><img src="images/auth0-login.png" alt="h:600"></p>
+<hr>
+<p><img src="images/auth0-branding.png" alt="h:500"></p>
+<hr>
+<p><img src="images/auth0-mfa.png" alt="h:500"></p>
+<hr>
+<p><img src="images/auth0-demo.png" alt="h:600"></p>
+<h2 id="google-workspace">Google Workspace</h2>
+<p><em>Unidirectional directory sync</em></p>
+<p>Passwords are pushed from directory to Google&rsquo;s</p>
+<p>Verified domains only</p>
+<p><!-- raw HTML omitted -->Not exploitable<!-- raw HTML omitted -->*</p>
+<p><!-- raw HTML omitted -->*until proven otherwise ;)<!-- raw HTML omitted --></p>
+<h1 id="versus-traditional-phishing">Versus traditional phishing</h1>
+<ul>
+<li>No fronting infrastructure / evilnginx / bitb&hellip;</li>
+<li>In most cases, <strong>free</strong></li>
+<li><strong>Trusted providers / domains / certificates</strong>
+<ul>
+<li>High chances of bypassing proxy whitelists</li>
+</ul>
+</li>
+<li>Extremely hard to detect
+<ul>
+<li>No alerts</li>
+<li>By users / victims</li>
+<li>By SOC friends <!-- raw HTML omitted -->(sorry&hellip;)<!-- raw HTML omitted --></li>
+</ul>
+</li>
+</ul>
+<h1 id="tools">Tools</h1>
+<ul>
+<li>Entra ID : <a href="https://github.com/xpn/CloudInject">https://github.com/xpn/CloudInject</a>
+<ul>
+<li>Can be improved to handle incorrect passwords</li>
+</ul>
+</li>
+<li>Okta
+<ul>
+<li>Known-login : CloudInject</li>
+<li>Passthrough : LDAP catch-all proxy (not public yet)</li>
+</ul>
+</li>
+</ul>
+<h1 id="fix-">Fix ?</h1>
+<p>Providers won&rsquo;t fix it.</p>
+<hr>
+<p>Okta don&rsquo;t care.</p>
+<p><img src="images/okta-wontfix.png" alt="h:500"></p>
+<h1 id="countermeasures--hunting">Countermeasures &amp; hunting</h1>
+<p>Depends on the IdP :(</p>
+<p>Does not protect you against uncovered IdPs.</p>
+<h1 id="hunt">Hunt</h1>
+<ul>
+<li>Entra ID
+<ul>
+<li>Proxy logs including <code>login_hint</code> with unknown / weird emails</li>
+</ul>
+</li>
+<li>Okta
+<ul>
+<li><code>(.*)\.okta.com</code>, look for unknown subdomains&hellip;</li>
+</ul>
+</li>
+<li>Post-mortem&hellip;</li>
+</ul>
+<h1 id="thank-you">Thank you</h1>
+<p>@mrsheepsheep</p>
+<p><a href="https://github.com/mrsheepsheep/idp-passthrough-phishing">github.com/mrsheepsheep/idp-passthrough-phishing</a></p>
+<p>For more technical details : at the bar ;)</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,234 @@
+<!doctype html>
+
+
+
+
+
+
+
+<html
+  class="not-ready lg:text-base"
+  style="--bg:#faf8f1"
+  lang="en-us"
+  dir="ltr"
+><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  
+  <title>Scrapping codesandbox.io for Discord bot tokens - MrSheepSheep&#39;s curiosities</title>
+
+  
+  <meta name="theme-color" />
+
+  <meta name="description" content="The number one security rule you should follow when developing on publicly available platforms is to never expose application secrets.
+The most widely known website where sensitive data exposure happens is Github. You can experience this by yourself pretty easily, actually. This kind of leakage happens quite regularly : it’s potentially one of the reasons the SolarWinds hack occured a few weeks ago !
+But I’m not here to talk about Github scraping." />
+  <meta name="author" content="Alexandre Souleau" /><link rel="preload stylesheet" as="style" href="http://localhost:1313/main.min.css" />
+
+  
+  <link rel="preload" as="image" href="http://localhost:1313/theme.svg" />
+
+  <link rel="preload" as="image" href="https://avatars.githubusercontent.com/u/4931825?v=4" />
+
+  <link rel="preload" as="image" href="http://localhost:1313/twitter.svg" /><link rel="preload" as="image" href="http://localhost:1313/github.svg" /><link rel="preload" as="image" href="http://localhost:1313/linkedin.svg" />
+
+  <script
+    defer
+    src="http://localhost:1313/highlight.min.js"
+    onload="hljs.initHighlightingOnLoad();"
+  ></script>
+
+  
+  <link
+    rel="icon"
+    href="http://localhost:1313/favicon.ico"
+  />
+  <link
+    rel="apple-touch-icon"
+    href="http://localhost:1313/apple-touch-icon.png"
+  />
+
+  <meta name="generator" content="Hugo 0.131.0">
+</head>
+<body
+    class="bg-(--bg) text-black antialiased duration-200 ease-out [-webkit-tap-highlight-color:transparent] dark:text-white"
+  ><header
+  class="mx-auto flex h-[4.5rem] max-w-(--w) px-8 whitespace-nowrap lg:justify-center"
+>
+  <div class="relative z-50 flex items-center ltr:mr-auto rtl:ml-auto">
+    <a
+      class="-translate-y-[1px] text-2xl font-medium"
+      href="http://localhost:1313/"
+      >MrSheepSheep&#39;s curiosities</a
+    >
+    <div
+      class="btn-dark text-[0px] ltr:ml-4 rtl:mr-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+      role="button"
+      aria-label="Dark"
+    ></div>
+  </div>
+
+  <div
+    class="btn-menu relative z-50 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden ltr:-mr-8 rtl:-ml-8"
+    role="button"
+    aria-label="Menu"
+  ></div>
+
+  <script>
+    
+    const htmlClass = document.documentElement.classList;
+    setTimeout(() => {
+      htmlClass.remove('not-ready');
+    }, 10);
+
+    
+    const btnMenu = document.querySelector('.btn-menu');
+    btnMenu.addEventListener('click', () => {
+      htmlClass.toggle('open');
+    });
+
+    
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
+    const setDark = (isDark) => {
+      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
+      htmlClass[isDark ? 'add' : 'remove']('dark');
+      localStorage.setItem('dark', isDark);
+    };
+
+    
+    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (htmlClass.contains('dark')) {
+      setDark(true);
+    } else {
+      const darkVal = localStorage.getItem('dark');
+      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
+    }
+
+    
+    darkScheme.addEventListener('change', (event) => {
+      setDark(event.matches);
+    });
+
+    
+    const btnDark = document.querySelector('.btn-dark');
+    btnDark.addEventListener('click', () => {
+      setDark(localStorage.getItem('dark') !== 'true');
+    });
+  </script>
+
+  <div
+    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full flex-col justify-center bg-(--bg) pb-16 duration-200 select-none lg:static lg:h-auto lg:flex-row lg:bg-transparent! lg:pb-0 lg:transition-none"
+  ><nav
+      class="mt-12 flex justify-center space-x-10 lg:mt-0 lg:items-center ltr:lg:ml-14 rtl:space-x-reverse rtl:lg:mr-14 dark:invert"
+    >
+      <a
+        class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./twitter.svg)"
+        href="https://twitter.com/MrSheepSheep"
+        target="_blank"
+        rel="me"
+      >twitter</a>
+      <a
+        class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./github.svg)"
+        href="https://github.com/mrsheepsheep"
+        target="_blank"
+        rel="me"
+      >github</a>
+      <a
+        class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./linkedin.svg)"
+        href="https://linkedin.com/in/alexandresouleau"
+        target="_blank"
+        rel="me"
+      >linkedin</a>
+    </nav>
+  </div>
+</header>
+<main
+      class="prose prose-neutral dark:prose-invert relative mx-auto min-h-[calc(100vh-9rem)] max-w-(--w) px-8 pt-14 pb-16"
+    ><article>
+  <header class="mb-14">
+    <h1 class="my-0! pb-2.5">Scrapping codesandbox.io for Discord bot tokens</h1><div class="text-xs antialiased opacity-60"><time>Jan 15, 2021</time></div></header>
+
+  <section><p>The number one security rule you should follow when developing on publicly available platforms is to never expose application secrets.</p>
+<p>The most widely known website where sensitive data exposure happens is Github. You can experience this by yourself pretty easily, actually. This kind of leakage happens quite regularly : <a href="https://twitter.com/vinodsparrow/status/1338431183588188160/photo/1">it’s potentially one of the reasons the SolarWinds hack occured</a> a few weeks ago !</p>
+<p>But I’m not here to talk about Github scraping. Today, I found another juicy target : <a href="https://codesandbox.io/">https://codesandbox.io/</a></p>
+<p>Codesandbox (at the time of writing) provides web-based IDEs (“sandboxes”) for developing all kind of applications (mostly websites). It supports many different languages and has all the features you would need for developing an app from prototype to deployment. It’s great, and the free plan offers everything you need except unlimited private sandboxes.</p>
+<p><img src="images/image-1.png" alt="images/image-1.png"></p>
+<p>As I’m writing this, codesandbox.io is hosting nearly 11 million projects publicly. You can search for sandboxes by name, tag, environment, or dependencies the projet may require.</p>
+<h4 id="discord-on-a-sandbox-">Discord on a sandbox ?</h4>
+<p>I’m often developing Discord bots for fun, and I was curious about running or testing bots on codesandbox. It appears many projects have tried (and succeeded).</p>
+<p><img src="images/image-2.png" alt="images/image-1.png"></p>
+<p>Obviously, not all projects are completed. Many of them are just drafts that do nothing interesting.</p>
+<p>At this point, you probably know what’s going to happen.</p>
+<h4 id="leaking-discord-bot-tokens">Leaking discord bot tokens</h4>
+<p>In order to run a Discord bot, you need to login using a provided secret token. It is unique and should be kept secret, as anyone with this token could impersonate the bot. The token is 59 characters, divided into three parts. This is a valid regex for finding a Discord token :<code>/[MN][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/g</code></p>
+<p>I’m not going to scrap those tokens manually by opening the 4156 sandboxes by hand and looking for tokens. Using Codesandbox’s search page queries, I was able to fetch all sandboxes names via Javascript, in the browser. Then, for each of these sandboxes, I could request all sandbox’s files and content and look for a discord token using the above regex pattern. The annoying part in scraping Codesandbox is that it is protected by Cloudflare and requests to sandbox data are rate-limited.</p>
+<p>I’m not going to show any code as I think it’s pretty self-explanatory, and it would be too easy for script kiddies to copy the code 😉.</p>
+<p>Once I scraped all sandboxes, I ended up with 1147 discord tokens. That’s a 1/4 chance of getting a token by simply opening any sandbox using discord.js</p>
+<p>I repeat, 25% sandboxes are exposing discord tokens publicly on this website. This is huge !!!</p>
+<p><img src="images/image-3.png" alt="images/image-1.png"></p>
+<h4 id="beep-boop-">Beep boop ?</h4>
+<p>Now is the time to test whether the tokens are still valid or not.</p>
+<p>Since I obtained those tokens by looking for the discord.js library, I’m going to use it to run a bot for each of these tokens, and see if it works.</p>
+<p><strong>End result : I was able to login as 566 different bots out of 1146.</strong></p>
+<p>I never thought I would be able to run that much bots at once, ever.</p>
+<p>So I guess it didn’t take long for me to… check what was going on with these bots. I decided to print all messages received by the bots. Anyone said <em>“privacy”</em> ?</p>
+<p>Messages were fuzzing, and funny enough, some Minecraft server logs were showing up, but something really stood out of the ordinary ; a single bot, <strong>Meteor#7315</strong>, was <strong>spamming</strong> my terminal. And messages didn’t came from just one server, there were <strong>hundreds</strong> of them !!! I was receiving between 4000 and 8000 messages every minute.</p>
+<p><img src="images/image-4.png" alt="images/image-1.png"></p>
+<h4 id="hitting-a-meteor--">Hitting a meteor … 🌠</h4>
+<p>Okay, so let’s forget about the small bots for a minute. Based on the number of messages I’m receiving, Meteor is a public bot. A quick Google search lead me to <a href="https://discord.bots.gg/bots/726831270616629354">one of the bot’s page on discord.bots.gg</a>. Chances are, most Discord server admins would have reached this page to add the bot to their server.</p>
+<p>So let’s try to invite the bot !</p>
+<p><img src="images/image-5.png" alt="images/image-1.png"></p>
+<p>So… the bot is asking for Administrator permissions. That’s the worst thing that could happen. The bot wants to be able to read and send messages on all channels (potentially to other bots, too), ban members, edit roles, change the server owner, create channels, webhooks…</p>
+<p>And Meteor doesn’t run on a dozen servers. <strong>It runs on 2150 servers</strong>, which means I’m in now able to delete, own, or even spy on all of them without anyone noticing.</p>
+<p>Better contact the developer right now !</p>
+<h4 id="-and-watching-it-explode--">… and watching it explode ! 💥</h4>
+<p>I wooshed in the bot’s official Discord server to warn about the issue and sent a private message to the developer. I also talked about the issue on the general channels.</p>
+<p><img src="images/image-6.png" alt="images/image-1.png"></p>
+<p>I found out they had a “Bug Hunter” role so I also decided to assign it to myself while waiting.</p>
+<p><img src="images/image-7.png" alt="images/image-1.png"></p>
+<p>Quickly after that, the developer hit the “Regenerate token” button on Discord developer portal. I was finally disconnected.</p>
+<p>But apparently, the developer had some issues with the new token. He was not able to retrieve the new one, and the bot is now shut down until Discord support team fixes the issue.</p>
+<p><img src="images/image-8.png" alt="images/image-1.png"></p>
+<h4 id="end-words">End words</h4>
+<p>This was my first experience with scraping leaked information on publicly available sources. Discord bot tokens were a fun target to play with, but keep in mind that this method also works with any kind of credentials that may be stored there : AWS secrets, Firebase and Google service accounts, SMTP, SSH keys, MySQL credentials…</p>
+<p>For the remaining bots that I leaked the tokens of, I invalidated all of them by publishing <a href="https://gist.github.com/mrsheepsheep/cbfe00db234ccc812153fc71d05b2569">a gist containing the all the tokens</a> I found along with their sandbox name.</p>
+<blockquote>
+<p>The gist has been deleted for unknown reasons and without notification. I sent a ticket to Github support regarding this.</p>
+</blockquote>
+<p>This night, 600 Discord bots died between my hands (hopefully for a short period of time).</p>
+<p>Statistics I obtained from this discovery showed that this leak could have affected a minimum of <strong>385 000</strong> users.</p>
+<p><img src="images/image-9.png" alt="images/image-1.png"></p>
+<p><img src="images/image-10.png" alt="images/image-1.png"></p>
+</section>
+
+  <nav
+    class="mt-24 flex overflow-hidden rounded-xl bg-black/[3%] text-lg leading-[1.2]! *:flex *:w-1/2 *:items-center *:p-5 *:font-medium *:no-underline dark:bg-white/[8%] [&>*:hover]:bg-black/[2%] dark:[&>*:hover]:bg-white/[3%]"
+  ><a class="ltr:pr-3 rtl:pl-3" href="http://localhost:1313/posts/azure-data-factory/"
+      ><span class="ltr:mr-1.5 rtl:ml-1.5">←</span><span>Exploiting Azure Data Factory to reach on-premise assets</span></a
+    ></nav></article></main><footer
+  class="mx-auto flex h-[4.5rem] max-w-(--w) items-center px-8 text-xs tracking-wider uppercase opacity-60"
+>
+  <div class="mr-auto">&copy;2025
+    <a class="link" href="http://localhost:1313/">MrSheepSheep&#39;s curiosities</a></div>
+  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
+    >powered by hugo️️</a
+  >️
+  <a
+    class="link"
+    href="https://github.com/nanxiaobei/hugo-paper"
+    rel="noopener"
+    target="_blank"
+    >hugo-paper</a
+  >
+</footer>
+</body>
+</html>

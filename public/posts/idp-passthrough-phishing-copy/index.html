@@ -1,0 +1,357 @@
+<!doctype html>
+
+
+
+
+
+
+
+<html
+  class="not-ready lg:text-base"
+  style="--bg:#faf8f1"
+  lang="en-us"
+  dir="ltr"
+><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  
+  <title>Abusing Cloud Identity Providers for Phishing - MrSheepSheep&#39;s curiosities</title>
+
+  
+  <meta name="theme-color" />
+
+  <meta name="description" content="Many Cloud identity providers offer the ability to delegate authentication to an external identity providers. This is known as Federated authentication.
+This post focuses on providers that offer Federated passthrough authentication to on-premise directories such as Active Directory or LDAP.
+If implemented incorrectly on the provider&rsquo;s side, on-premise passthrough authentication can be abused by threat actors to perform phishing attacks from the provider&rsquo;s login page directly, under the attacker&rsquo;s tenant / organization page." />
+  <meta name="author" content="Alexandre Souleau" /><link rel="preload stylesheet" as="style" href="http://localhost:1313/main.min.css" />
+
+  
+  <link rel="preload" as="image" href="http://localhost:1313/theme.svg" />
+
+  <link rel="preload" as="image" href="https://avatars.githubusercontent.com/u/4931825?v=4" />
+
+  <link rel="preload" as="image" href="http://localhost:1313/twitter.svg" /><link rel="preload" as="image" href="http://localhost:1313/github.svg" /><link rel="preload" as="image" href="http://localhost:1313/linkedin.svg" />
+
+  <script
+    defer
+    src="http://localhost:1313/highlight.min.js"
+    onload="hljs.initHighlightingOnLoad();"
+  ></script>
+
+  
+  <link
+    rel="icon"
+    href="http://localhost:1313/favicon.ico"
+  />
+  <link
+    rel="apple-touch-icon"
+    href="http://localhost:1313/apple-touch-icon.png"
+  />
+
+  <meta name="generator" content="Hugo 0.131.0">
+</head>
+<body
+    class="bg-(--bg) text-black antialiased duration-200 ease-out [-webkit-tap-highlight-color:transparent] dark:text-white"
+  ><header
+  class="mx-auto flex h-[4.5rem] max-w-(--w) px-8 whitespace-nowrap lg:justify-center"
+>
+  <div class="relative z-50 flex items-center ltr:mr-auto rtl:ml-auto">
+    <a
+      class="-translate-y-[1px] text-2xl font-medium"
+      href="http://localhost:1313/"
+      >MrSheepSheep&#39;s curiosities</a
+    >
+    <div
+      class="btn-dark text-[0px] ltr:ml-4 rtl:mr-4 h-6 w-6 shrink-0 cursor-pointer [background:url(./theme.svg)_left_center/cover_no-repeat] dark:invert dark:[background-position:right]"
+      role="button"
+      aria-label="Dark"
+    ></div>
+  </div>
+
+  <div
+    class="btn-menu relative z-50 flex h-[4.5rem] w-[5rem] shrink-0 cursor-pointer flex-col items-center justify-center gap-2.5 lg:hidden ltr:-mr-8 rtl:-ml-8"
+    role="button"
+    aria-label="Menu"
+  ></div>
+
+  <script>
+    
+    const htmlClass = document.documentElement.classList;
+    setTimeout(() => {
+      htmlClass.remove('not-ready');
+    }, 10);
+
+    
+    const btnMenu = document.querySelector('.btn-menu');
+    btnMenu.addEventListener('click', () => {
+      htmlClass.toggle('open');
+    });
+
+    
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const lightBg = '#faf8f1'.replace(/"/g, '');
+    const setDark = (isDark) => {
+      metaTheme.setAttribute('content', isDark ? '#000' : lightBg);
+      htmlClass[isDark ? 'add' : 'remove']('dark');
+      localStorage.setItem('dark', isDark);
+    };
+
+    
+    const darkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    if (htmlClass.contains('dark')) {
+      setDark(true);
+    } else {
+      const darkVal = localStorage.getItem('dark');
+      setDark(darkVal ? darkVal === 'true' : darkScheme.matches);
+    }
+
+    
+    darkScheme.addEventListener('change', (event) => {
+      setDark(event.matches);
+    });
+
+    
+    const btnDark = document.querySelector('.btn-dark');
+    btnDark.addEventListener('click', () => {
+      setDark(localStorage.getItem('dark') !== 'true');
+    });
+  </script>
+
+  <div
+    class="nav-wrapper fixed inset-x-0 top-full z-40 flex h-full flex-col justify-center bg-(--bg) pb-16 duration-200 select-none lg:static lg:h-auto lg:flex-row lg:bg-transparent! lg:pb-0 lg:transition-none"
+  ><nav
+      class="mt-12 flex justify-center space-x-10 lg:mt-0 lg:items-center ltr:lg:ml-14 rtl:space-x-reverse rtl:lg:mr-14 dark:invert"
+    >
+      <a
+        class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./twitter.svg)"
+        href="https://twitter.com/MrSheepSheep"
+        target="_blank"
+        rel="me"
+      >twitter</a>
+      <a
+        class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./github.svg)"
+        href="https://github.com/mrsheepsheep"
+        target="_blank"
+        rel="me"
+      >github</a>
+      <a
+        class="h-7 w-7 text-[0px] [background:var(--url)_center_center/cover_no-repeat] lg:h-6 lg:w-6"
+        style="--url: url(./linkedin.svg)"
+        href="https://linkedin.com/in/alexandresouleau"
+        target="_blank"
+        rel="me"
+      >linkedin</a>
+    </nav>
+  </div>
+</header>
+<main
+      class="prose prose-neutral dark:prose-invert relative mx-auto min-h-[calc(100vh-9rem)] max-w-(--w) px-8 pt-14 pb-16"
+    ><article>
+  <header class="mb-14">
+    <h1 class="my-0! pb-2.5">Abusing Cloud Identity Providers for Phishing</h1><div class="text-xs antialiased opacity-60"><time>Jun 3, 2025</time></div></header>
+
+  <section><p>Many Cloud identity providers offer the ability to delegate authentication to an external identity providers. This is known as Federated authentication.</p>
+<p>This post focuses on providers that offer Federated passthrough authentication to on-premise directories such as Active Directory or LDAP.</p>
+<p>If implemented incorrectly on the provider&rsquo;s side, on-premise passthrough authentication can be abused by threat actors to perform phishing attacks from the provider&rsquo;s login page directly, under the attacker&rsquo;s tenant / organization page.</p>
+<p>I&rsquo;m not sure this topic has been fully covered before. I&rsquo;m essentially extending <a href="https://blog.xpnsec.com/identity-providers-redteamers/">XPN&rsquo;s incredible work</a> which covers post-exploitation abuse and a bit of &ldquo;blackbox&rdquo; phishing. This is all based on my own research on the topic.</p>
+<p>This phishing scenario is much more powerful than traditional attacker-hosted phishing pages, as it allows the attacker to leverage the provider&rsquo;s branding, trust, and root domain to trick the victim into entering their credentials. Identity providers are often whitelisted by internal proxies, and password managers may even prefill passwords on attacker&rsquo;s tenants.</p>
+<p>Identity providers do not consider this a vulnerability, as it is a feature of the product. However, I believe it is a security risk that should be addressed, until passwordless authentication becomes the norm for everyone.</p>
+<h2 id="identity-providers">Identity Providers</h2>
+<p>During my research, I encountered 3 different identity providers behaviors that could be exploited.</p>
+<p>The following table lists the identity providers that are known to be exploitable (or not) using each techniques, described below.</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Passthrough</th>
+<th>Known-login</th>
+<th>Prefill</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google Workspace</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td></td>
+</tr>
+<tr>
+<td>Entra ID</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Okta</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>Also known as <a href="https://pushsecurity.com/blog/oktajacking/">Oktajacking</a>.</td>
+</tr>
+<tr>
+<td>Auth0</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>It&rsquo;s a feature.</td>
+</tr>
+<tr>
+<td>PingIdentity</td>
+<td>✅</td>
+<td>✅</td>
+<td>?</td>
+<td>See <a href="https://blog.xpnsec.com/identity-providers-redteamers/">XPN&rsquo;s PoC</a></td>
+</tr>
+</tbody>
+</table>
+<p>Some service providers (not identity-specific) may also be exploited, depending on how they integrate on-premise authentication with their own federation systems.</p>
+<h2 id="phishing-vectors">Phishing Vectors</h2>
+<h3 id="passthrough-phishing">Passthrough phishing</h3>
+<p>When the victim enters their credentials, the identity provider will forward the cleartext password to the on-premise agent.</p>
+<p>If the identity provider checks the existence of the username against the attacker&rsquo;s directory, the attacker can deploy a catch-all proxy to always fullfill the request.</p>
+<p><img src="images/passthrough-form.svg" alt="Passthrough Form"></p>
+<p><img src="images/passthrough.svg" alt="Passthrough Diagram"></p>
+<p>Passthrough phishing can be deployed to target a large number of users.</p>
+<h3 id="known-login-phishing">Known-login phishing</h3>
+<p>When passthrough is not possible and just-in-time provisioning is not available, the attacker can still perform a known-login attack. This method is less effective as it requires the attacker to know the username of the targeted victim. It&rsquo;s usually used in a spear-phishing scenario.</p>
+<p>The attacker expects the victim to enter an username that&rsquo;s already in the attacker&rsquo;s directory. The identity provider will first check the existence of the username, and if it exists, forward the cleartext password to the on-premise agent.</p>
+<p>If the identity provider does not check existence of the username against the attacker&rsquo;s directory, the method is a actually a passthrough phishing. By nature, all passthrough phishing are also known-login phishing.</p>
+<p>This method usually requires to spoof the victim&rsquo;s username, especially in the case of email addresses.</p>
+<p>The known-login phishing method can also be combined with the prefill method to increase the success rate.</p>
+<p>In some cases, the Known-login method <em>may</em> be considered a vulnerability that can be fixed by the provider.</p>
+<h3 id="prefill-phishing-aka-login-hint-phishing">Prefill phishing (a.k.a. login hint phishing)</h3>
+<p>To prevent known-login ohishing, some identity providers require tenant / organization owners to prove ownership of the domain before they can use it.</p>
+<p>However, it is still possible to perform a prefill attack, which allows an attacker to prefill the username field with a username that&rsquo;s already in the attacker&rsquo;s directory.</p>
+<p><img src="images/domain-ownership.svg" alt="Domain ownership diagram"></p>
+<p>Some providers allow the attacker to prefill the username field. The attacker can prefill the username field with a username that&rsquo;s already in the attacker&rsquo;s directory.</p>
+<p>The attacker can either typosquat the victim&rsquo;s domain or use built-in domains provided by the identity provider.</p>
+<p><img src="images/prefill-form.svg" alt="Prefill attack form"></p>
+<p>The victim will then enter their password, and the identity provider will forward the cleartext password to the on-premise agent.</p>
+<h2 id="the-right-way-to-do-it">The right way to do it</h2>
+<p>Identity Providers have multiple choices to properly do federated authentication with on-premise directories.:</p>
+<ol>
+<li>Enforce email authentication and domain ownership verification. Disable username prefill.</li>
+<li>Synchronize password hashes <em>from</em> the on-premise directory <em>to</em> the cloud directory. This ensures no password will ever be sent in cleartext to the on-premise agent / third-party system. <a href="https://cloud.google.com/architecture/identity/federating-gcp-with-active-directory-synchronizing-user-accounts">Google has implemented this solution for AD authentication</a>.</li>
+</ol>
+<p><img src="images/password-hash-synchronization.svg" alt="Password hash sync diagram"></p>
+<ol start="3">
+<li><em>Redirect</em> the user to the third-party authentication system, like ADFS / SAML. At least, the identity provider will not be responsible for forwarding credentials, and the scenario becomes a generic phishing scenario.</li>
+</ol>
+<p>Some identity providers, like Entra ID, provide both passthrough authentication and password hash synchronization. Alas, as long as passthrough authentication exists on the identity provider, it will be possible to perform a prefill attack.</p>
+<h3 id="user-awareness">User awareness</h3>
+<p>Because branding can easily be spoofed thanks to provider&rsquo;s customization options. The root domain may be considered trusted by most users.
+Users are trained to double-check URLs for typosquatting, but they will most likely trust any typosquatted subdomain of a trusted root domain.</p>
+<p>Thus, there must be other, non-spoofable ways of telling the user where they&rsquo;re logging in.</p>
+<p>Sadly, it&rsquo;s exceptionnally hard to display non-spoofable yet user-friendly, human-rememberable information.</p>
+<p>Providers could display a warning on the login page when passthrough authentication is enabled.</p>
+<h2 id="some-example-providers">Some example providers</h2>
+<h3 id="entra-id">Entra ID</h3>
+<p><strong>Update : <a href="https://media.defcon.org/DEF%20CON%2033/DEF%20CON%2033%20presentations/Keanu%20Nys%20-%20Turning%20Microsoft%27s%20Login%20Page%20into%20our%20Phishing%20Infrastructure.pdf">see Keanu Nys research at DEFCON 33</a></strong></p>
+<p>Entra ID is vulnerable to a Prefill attacks using the <code>login_hint</code> and <code>username</code> <a href="https://learn.microsoft.com/fr-fr/entra/identity-platform/v2-protocols-oidc">OIDC URL query parameters</a>.</p>
+<p>An attacker could setup its own Entra ID tenant and prepare credential harvesting using <a href="https://github.com/xpn/CloudInject">CloudInject</a>.</p>
+<p>The attacker must create dedicated AD accounts for its victims, and prefill their username according to one of the <a href="https://learn.microsoft.com/en-us/entra/identity/hybrid/connect/plan-connect-userprincipalname">user&rsquo;s valid UPNs</a>.</p>
+<pre tabindex="0"><code>GET https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize?
+client_id=00001111-aaaa-2222-bbbb-3333cccc4444
+&amp;response_type=code%20id_token
+&amp;redirect_uri=http%3A%2F%2Flocalhost%2Fmyapp%2F
+&amp;response_mode=form_post
+&amp;scope=null
+&amp;username=victim@attacker-tenant.onmicrosoft.com
+&amp;login_hint=victim@attacker-tenant.onmicrosoft.com
+</code></pre><p>Previously, Entra ID was vulnerable to UPN spoofing, allowing attackers to spoof arbitrary logins, as shown in the demo video :</p>
+<p><a href="demos/entra.mp4"><img src="demos/entra.png" alt="demos/entra.mp4"></a>
+<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<p><strong>Generic example</strong></p>
+<p><a href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=00001111-aaaa-2222-bbbb-3333cccc4444&amp;response_type=code%20id_token&amp;redirect_uri=http%3A%2F%2Flocalhost%2Fmyapp%2F&amp;response_mode=form_post&amp;scope=null&amp;username=victim@attacker-tenant.onmicrosoft.com&amp;login_hint=victim@attacker-tenant.onmicrosoft.com">You can try the prefill trick directly here on the &ldquo;common&rdquo; tenant</a>.</p>
+<p><code>attacker-tenant.onmicrosoft.com</code> can be abused to typosquat another&rsquo;s tenant root domain.</p>
+<blockquote>
+<p>The <code>login_hint</code> parameter can also be set on Microsoft apps such as a victim&rsquo;s legitimate sharepoint and others apps. The parameter will be transferred to the login page as-is. The prompt will be displayed even if the victim is already logged-in into its own tenant.</p>
+</blockquote>
+<p>Outlook redirection example : <a href="http://outlook.live.com/?login_hint=victim@attacker-tenant.onmicrosoft.com">http://outlook.live.com/?login_hint=victim@attacker-tenant.onmicrosoft.com</a></p>
+<p>Sharepoint redirection example : <a href="https://microsoft.sharepoint.com/?login_hint=victim@attacker-tenant.onmicrosoft.com">https://microsoft.sharepoint.com/?login_hint=victim@attacker-tenant.onmicrosoft.com</a></p>
+<p><strong>Tenant typosquatting</strong></p>
+<p>Say <code>MyCompany</code> uses <code>mycompany.net</code> as its primary UPN domain and <code>mycompany-org.onmicrosoft.com</code> as its Entra ID domain. The victim&rsquo;s legitimate primary UPN is <code>victim@mycompany.net</code>.</p>
+<p>The attacker could then register a new Entra domain <code>mycompany.onmicrosoft.com</code> and prefill <code>victim@mycompany.onmicrosoft.com</code>.</p>
+<p>Full domain typosquatting is also possible but requires the attacker to prove domain ownership to Azure.</p>
+<h3 id="okta">Okta</h3>
+<p><a href="https://pushsecurity.com/blog/oktajacking/">OktaJacking</a> can be exploited in a Known-Login scenario.</p>
+<p>However, it is possible to use the Okta LDAP agent and a catch-all user proxy to enhance PushSecurity&rsquo;s attack and remove the known-login requirement, making it a full Passthrough phishing.</p>
+<p><a href="demos/okta.mp4"><img src="demos/okta.png" alt="demos/okta.mp4"></a></p>
+<h3 id="auth0">Auth0</h3>
+<p>Auth0 can be turned into a phishing hosting platform by design.</p>
+<h3 id="pingidentity">PingIdentity</h3>
+<p><a href="https://blog.xpnsec.com/identity-providers-redteamers#Phishing">Refer to XPN&rsquo;s work in Identity Providers for Redteamers</a>.</p>
+<h2 id="detection">Detection</h2>
+<p>If you&rsquo;re a detection engineer or working in a SOC, you have very few options with a high false positive rate.</p>
+<p>You will most likely have to ignore the vector and focus on post-authentication detection.</p>
+<p>Eventually, think about it during incident response and threat hunting. Check for unknown provider tenant requests (either subdomains or tenant IDs)</p>
+<h2 id="resources-and-previous-work">Resources and previous work</h2>
+<ul>
+<li><a href="https://blog.xpnsec.com/okta-for-redteamers/">https://blog.xpnsec.com/okta-for-redteamers/</a></li>
+<li><a href="https://blog.xpnsec.com/identity-providers-redteamers/">https://blog.xpnsec.com/identity-providers-redteamers/</a></li>
+<li><a href="https://blog.xpnsec.com/azuread-connect-for-redteam/">https://blog.xpnsec.com/azuread-connect-for-redteam/</a></li>
+<li><a href="https://pushsecurity.com/blog/oktajacking/">https://pushsecurity.com/blog/oktajacking/</a></li>
+<li><a href="https://web.archive.org/web/20220823115131/https://www.imperva.com/blog/how-i-impersonated-someone-else-using-auth0/">https://web.archive.org/web/20220823115131/https://www.imperva.com/blog/how-i-impersonated-someone-else-using-auth0/</a></li>
+<li><a href="https://auth0.com/blog/phishing-attacks-with-auth0-facts-first/">https://auth0.com/blog/phishing-attacks-with-auth0-facts-first/</a></li>
+</ul>
+<p>Please let me know about other research material I may have missed !</p>
+</section>
+
+  <footer class="mt-12 flex flex-wrap"><a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="http://localhost:1313/tags/phishing"
+      >Phishing</a
+    ><a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="http://localhost:1313/tags/entra-id"
+      >Entra ID</a
+    ><a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="http://localhost:1313/tags/okta"
+      >Okta</a
+    ><a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="http://localhost:1313/tags/cloud"
+      >Cloud</a
+    ><a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="http://localhost:1313/tags/auth0"
+      >Auth0</a
+    ><a
+      class="mb-1.5 rounded-lg bg-black/[3%] px-5 py-1 no-underline hover:bg-black/[6%] ltr:mr-1.5 rtl:ml-1.5 dark:bg-white/[8%] dark:hover:bg-white/[12%]"
+      href="http://localhost:1313/tags/pingidentity"
+      >PingIdentity</a
+    ></footer><nav
+    class="mt-24 flex overflow-hidden rounded-xl bg-black/[3%] text-lg leading-[1.2]! *:flex *:w-1/2 *:items-center *:p-5 *:font-medium *:no-underline dark:bg-white/[8%] [&>*:hover]:bg-black/[2%] dark:[&>*:hover]:bg-white/[3%]"
+  ><a
+      class="justify-end pl-3 ltr:ml-auto rtl:mr-auto"
+      href="http://localhost:1313/posts/idp-passthrough-phishing/"
+      ><span>Abusing Cloud Identity Providers for Phishing</span><span class="ltr:ml-1.5 rtl:mr-1.5">→</span></a
+    ></nav></article></main><footer
+  class="mx-auto flex h-[4.5rem] max-w-(--w) items-center px-8 text-xs tracking-wider uppercase opacity-60"
+>
+  <div class="mr-auto">&copy;2025
+    <a class="link" href="http://localhost:1313/">MrSheepSheep&#39;s curiosities</a></div>
+  <a class="link mx-6" href="https://gohugo.io/" rel="noopener" target="_blank"
+    >powered by hugo️️</a
+  >️
+  <a
+    class="link"
+    href="https://github.com/nanxiaobei/hugo-paper"
+    rel="noopener"
+    target="_blank"
+    >hugo-paper</a
+  >
+</footer>
+</body>
+</html>

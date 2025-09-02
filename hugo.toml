@@ -1,0 +1,24 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = "MrSheepSheep's curiosities"
+theme = "paper"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
+
+[params]
+  # color style
+
+  # header social icons
+  twitter = 'MrSheepSheep'               # twitter.com/YOUR_TWITTER_ID
+  github = 'mrsheepsheep'                 # github.com/YOUR_GITHUB_ID
+  linkedin = 'alexandresouleau'             # linkedin.com/in/YOUR_LINKEDIN_ID
+
+  # home page profile
+  avatar = 'https://avatars.githubusercontent.com/u/4931825?v=4'                 # gravatar email or image url
+  name = 'Alexandre Souleau'
+  bio = 'Insecure by design'
+
+  # misc
+  monoDarkIcon = true                       # show monochrome dark mode icon
