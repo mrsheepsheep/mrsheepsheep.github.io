@@ -6,8 +6,6 @@ description: >-
   came up with a weird idea : is it possible to hit the Docker API from an XSS ?
 ---
 
-# 
-
 ### Finding the right API endpoint
 
 To exploit any API endpoint from an XSS, we first need to fight CORS restrictions. Sadly for us, Docker does not return any [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
@@ -18,7 +16,7 @@ Looking at the [Docker API documentation](https://docs.docker.com/reference/api/
 
 While crawling through the docs, it seems that `POST /build` is the perfect candidate for our experiment.
 
-[{% embed url="" %}](https://docs.docker.com/reference/api/engine/version/v1.45/#tag/Image/operation/ImageBuild)
+https://docs.docker.com/reference/api/engine/version/v1.45/#tag/Image/operation/ImageBuild
 
 The endpoint only expects _query_ parameters, which can easily be sent from an HTML form. It does not require the `application/json` Content-Type either.
 
